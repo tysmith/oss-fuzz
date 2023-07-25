@@ -33,6 +33,11 @@ RUN git clone --depth 1 https://github.com/freetype/freetype
 RUN git clone --depth 1 https://gitlab.com/federicomenaquintero/bzip2.git
 RUN git clone --depth 1 --recursive https://github.com/libjxl/libjxl
 RUN git clone https://www.cl.cam.ac.uk/~mgk25/git/jbigkit # does not support shallow
+# Install corpus replicator and deps, generate testcases and remove deps
+RUN python3 -m pip install corpus-replicator
+RUN apt-get install ffmpeg -y --no-install-recommends
+RUN corpus-replicator -o heic_corpus image_heic_heic_imagemagick.yml image
+RUN apt-get remove -y --auto-remove ffmpeg
 ADD https://lcamtuf.coredump.cx/afl/demo/afl_testcases.tgz afl_testcases.tgz
 WORKDIR imagemagick
 COPY build.sh $SRC/
